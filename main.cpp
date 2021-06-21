@@ -3,6 +3,7 @@
 #include <fstream>
 
 const int QUESTIONS_COUNT = 13;
+const int MAX_SCORES = 6;
 
 /*
  * Read files into vector. Return status of error into 'errorFlag' (true if error).
@@ -113,7 +114,7 @@ void getWinner(const int scoresPlayer_1, const int scoresPlayer_2, const int max
 {
     if (scoresPlayer_1 == maxScores || scoresPlayer_2 == maxScores)
     {
-        std::cout << "The winner is " << (scoresPlayer_1 == maxScores ? "Player 1" : "Player 2") << "\n";
+        std::cout << "The winner is " << (scoresPlayer_1 == maxScores ? "Experts team" : "Audience team") << "\n";
         std::cout << "Congratulations!\n";
     }
     else
@@ -142,25 +143,24 @@ int main() {
 
     std::cout << "-----------------------\n";
     std::cout << "Game is started!\n";
-    int scoresPlayer_1 = 0;
-    int scoresPlayer_2 = 0;
+    int scoresExperts = 0;
+    int scoresAudience = 0;
     int currentQuestionIndex = 0;
     bool isStopped = false;
-    while (scoresPlayer_1 < 7 && scoresPlayer_2 < 7)
+    while (scoresExperts < MAX_SCORES && scoresAudience < MAX_SCORES)
     {
         //take offset
         int offset = getOffset(isStopped);
         if (isStopped) break;
-        std::cout << "You've entered " << offset << "\n";
 
         //find question
         int nextQuestionIndex = findNextQuestion(nonPlayedQuestions, offset, currentQuestionIndex);
         if (nextQuestionIndex == -1) break;
-        std::cout << "Question " << (nextQuestionIndex + 1) << " is chosen.\n";
+        std::cout << "Question " << (nextQuestionIndex + 1) << " is chosen\n";
         nonPlayedQuestions[nextQuestionIndex] = false;
 
         //ask question
-        std::cout << "Question:\n" << questions[nextQuestionIndex] << "\n";
+        std::cout << "Question: " << questions[nextQuestionIndex] << "\n";
 
         //take answer
         std::cout << "Your answer: ";
@@ -170,22 +170,24 @@ int main() {
         //check answer
         if (answer == answers[nextQuestionIndex])
         {
-            scoresPlayer_1++;
+            scoresExperts++;
             std::cout << "Correct!\n";
+            std::cout << "1 score to Experts!\n";
         }
         else
         {
-            scoresPlayer_2++;
+            scoresAudience++;
             std::cout << "Wrong! The correct answer is " << answers[nextQuestionIndex] << "\n";
+            std::cout << "1 score to Audience!\n";
         }
 
         //print scores
-        std::cout << "Player 1 scores: " << scoresPlayer_1 << "\n";
-        std::cout << "Player 2 scores: " << scoresPlayer_2 << "\n";
+        std::cout << "Experts scores: " << scoresExperts << "\n";
+        std::cout << "Audience scores: " << scoresAudience << "\n";
 
 
         //check if next turn is necessary
-        if (scoresPlayer_1 != 7 && scoresPlayer_2 != 7)
+        if (scoresExperts != MAX_SCORES && scoresAudience != MAX_SCORES)
         {
             std::cout << "--------------Next turn!--------------\n";
             currentQuestionIndex = nextQuestionIndex;
@@ -193,7 +195,7 @@ int main() {
         else
             std::cout << "-----------Game is finished-----------\n";
     }
-    getWinner(scoresPlayer_1, scoresPlayer_2, 7);
+    getWinner(scoresExperts, scoresAudience, MAX_SCORES);
 
     return 0;
 }
