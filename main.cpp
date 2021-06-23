@@ -23,7 +23,7 @@ void readAssets(std::vector<std::string>& v, const std::string& assetName, bool&
             {
                 char* buffer = new char[100];
                 stream.read(buffer,100);
-                if (stream.gcount() < 100) buffer[stream.gcount()] = '\0';
+                buffer[stream.gcount()] = '\0';
                 content += buffer;
             }
             v.push_back(content);
